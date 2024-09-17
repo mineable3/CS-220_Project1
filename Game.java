@@ -19,6 +19,10 @@ public class Game {
     } catch (FileNotFoundException e) {
       System.out.println("File does not exist");
       System.out.println("Exiting game");
+    } catch (NumberFormatException e) {
+      System.out.println("The configuration file was set up incorrectly");
+    } catch (IllegalArgumentException e) {
+      System.out.println("The configuration file was set up incorrectly");
     }
   }
 
