@@ -14,7 +14,7 @@ public class Game {
       if(example == TestCases.PERFORMANCE) {
         iterateGrid(100, 200);
       } else {
-        iterateGrid(5);
+        iterateGrid(10);
       }
     } catch (FileNotFoundException e) {
       System.out.println("File does not exist");
@@ -72,6 +72,7 @@ public class Game {
     System.out.println("\t[9] |  Invalid inputs\n");
     System.out.print("Enter here: ");
 
+    // Initializing the Grid and setting its state to the correct file
     try(Scanner scan = new Scanner(System.in)) {
       switch (scan.nextInt()) {
         case 1:
@@ -116,6 +117,7 @@ public class Game {
           grid.setGridState(randomGame);
           break;
         case 8:
+          // Same as the RANDOM test case, but bigger and the game runs longer
           example = TestCases.PERFORMANCE;
           int[][] performance = new int[20][20];
           for (int i = 0; i < 20; i++) {
@@ -138,6 +140,7 @@ public class Game {
     }
   }
 
+  // A full list of all the required test cases
   public enum TestCases {
     FLYER,
     BLINKER,
