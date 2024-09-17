@@ -23,6 +23,10 @@ public class Grid {
     }
   }
 
+  public void setGridState(int[][] config) {
+    this.currentState = config;
+  }
+
   public void printGrid() {
     for(int i = 0; i < currentState.length; i++) {
       for(int j = 0; j < currentState[i].length; j++) {
