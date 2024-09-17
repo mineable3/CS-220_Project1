@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Grid {
@@ -16,7 +17,7 @@ public class Grid {
     nextState = new int[height][width];
   }
 
-  public void setGridState(File config) {
+  public void setGridState(File config) throws FileNotFoundException {
     for (int i = 0; i < height; i++) {
       this.currentState[i] = csvToArray(config, i);
     }
@@ -32,7 +33,7 @@ public class Grid {
     System.out.println();
   }
 
-  private int[] csvToArray(File file, int lineNumber) {
+  private int[] csvToArray(File file, int lineNumber) throws FileNotFoundException {
     ArrayList<Integer> values = new ArrayList<Integer>();
     String[] rawData;
     int[] outputData;
@@ -46,7 +47,13 @@ public class Grid {
 
       for(String num : rawData) {
         if(!num.equals("") && !num.isBlank() && !num.isEmpty()) {
-          values.add(Integer.parseInt(num));
+          int integer = Integer.parseInt(num.trim());
+
+          if(integer != 1 && integer != 0) {
+            throw new IllegalArgumentException("Only 1 or 0 is accepted as a cell state");
+          }
+
+          values.add(integer);
         }
       }
 
@@ -54,13 +61,14 @@ public class Grid {
       for(int i = 0; i < values.size(); i++) {
         outputData[i] = values.get(i);
       }
-    } catch (FileNotFoundException e) {
-      System.err.println(e);
-      outputData = new int[0];
+    } catch (NumberFormatException e) {
+      throw new NumberFormatException("Only 1 or 0 is accepted as a cell state");
+    } catch (NoSuchElementException e) {
+      throw new NoSuchElementException("The file is shorter that expected");
     }
 
     if(outputData.length != width) {
-      System.out.println("The configuration file is the wrong dimensions");
+      throw new IllegalArgumentException("The configuration file is the wrong dimensions");
     }
 
     return outputData;
