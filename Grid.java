@@ -17,16 +17,45 @@ public class Grid {
     nextState = new int[height][width];
   }
 
+  /**
+   * Parses the input file and it assumes it is in CSV format.
+   * Sets the current state of the grid to the data inside the file.
+   * @param config A File representing the configuration state.
+   * @throws FileNotFoundException If the file doesn't exist
+   * @throws IllegalArgumentException If the array dimensions are incorrect or has values other than 0 or 1
+   * @throws NumberFormatException If the file contains values that are not numbers
+   */
   public void setGridState(File config) throws FileNotFoundException {
     for (int i = 0; i < height; i++) {
       this.currentState[i] = csvToArray(config, i);
     }
   }
 
+  /**
+   * Directly sets the current grid state to the input array
+   * @param config A two dimensional array representing a game state
+   * @throws IllegalArgumentException If the array dimensions are incorrect or has values other than 0 or 1
+   */
   public void setGridState(int[][] config) {
+    // Checking array dimensions
+    if(config.length != height || config[0].length != width) {
+      throw new IllegalArgumentException("The configuration is the wrong dimensions");
+    }
+
+    // Checking the array has only 1's or 0's
+    for (int i = 0; i < config.length; i++) {
+      for (int j = 0; j < config[i].length; j++) {
+        if(config[i][j] != 1 && config[i][j] != 0) {
+          throw new IllegalArgumentException("Only 1 or 0 is accepted as a cell state");
+        }
+      }
+    }
     this.currentState = config;
   }
 
+  /**
+   * Displays the grid's current state
+   */
   public void printGrid() {
     for(int i = 0; i < currentState.length; i++) {
       for(int j = 0; j < currentState[i].length; j++) {
@@ -37,18 +66,29 @@ public class Grid {
     System.out.println();
   }
 
+  /**
+   * Parses one line of a CSV file and turns it into an array
+   * @param file A CSV file to be parsed
+   * @param lineNumber The line to parse
+   * @return The given line as an array
+   * @throws FileNotFoundException If the File does not exist
+   * @throws IllegalArgumentException If the array dimensions are incorrect or has values other than 0 or 1
+   * @throws NumberFormatException If the file contains values that are not numbers
+   */
   private int[] csvToArray(File file, int lineNumber) throws FileNotFoundException {
     ArrayList<Integer> values = new ArrayList<Integer>();
     String[] rawData;
     int[] outputData;
 
     try(Scanner scan1 = new Scanner(file);) {
+      // Skipping to the desired line
       for (int i = 0; i < lineNumber; i++) {
         scan1.nextLine();
       }
 
       rawData = scan1.nextLine().split(",", -1);
 
+      // Converting the Strings into integers
       for(String num : rawData) {
         if(!num.equals("") && !num.isBlank() && !num.isEmpty()) {
           int integer = Integer.parseInt(num.trim());
@@ -61,6 +101,7 @@ public class Grid {
         }
       }
 
+      // Converting the ArrayList holding the values into an array
       outputData = new int[values.size()];
       for(int i = 0; i < values.size(); i++) {
         outputData[i] = values.get(i);
@@ -78,6 +119,9 @@ public class Grid {
     return outputData;
   }
 
+  /**
+   * Updates the cells and sets the current state to the next generation
+   */
   public void updateGridState() {
     for (int i = 0; i < currentState.length; i++) {
       for (int j = 0; j < currentState[0].length; j++) {
@@ -92,6 +136,11 @@ public class Grid {
     }
   }
 
+  /**
+   * Applies all of the rules of Conway's Game of Life and stores the results in the nextState[][]
+   * @param row The row of the cell
+   * @param column The column of the cell
+   */
   private void updateCellState(int row, int column) {
     int cellValue = sumNeighbors(row, column);
 
@@ -106,6 +155,12 @@ public class Grid {
     }
   }
 
+  /**
+   * Sums the number of alive cells surrounding the target cell in the current state
+   * @param row The row of the cell
+   * @param column The column of the cell
+   * @return The sum of surrounding alive cells
+   */
   private int sumNeighbors(int row, int column) {
     int sum = 0;
 

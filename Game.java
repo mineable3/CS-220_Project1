@@ -7,10 +7,15 @@ public class Game {
   private Grid grid;
   private TestCases example;
 
+  /**
+   * Begins running the game, starting the user interface
+   */
   public void run() {
     try {
+      // Handles user input and initializes grid
       intializeProgram();
 
+      // Makes the game run longer and faster to test performace
       if(example == TestCases.PERFORMANCE) {
         iterateGrid(100, 200);
       } else {
@@ -20,16 +25,26 @@ public class Game {
       System.out.println("File does not exist");
       System.out.println("Exiting game");
     } catch (NumberFormatException e) {
-      System.out.println("The configuration file was set up incorrectly");
+      System.out.println("The configuration was set up incorrectly");
     } catch (IllegalArgumentException e) {
-      System.out.println("The configuration file was set up incorrectly");
+      System.out.println("The configuration was set up incorrectly");
     }
   }
 
+  /**
+   * Handles displaying the game and updating the state.
+   * It will update to the next generation every 800 milliseconds.
+   * @param generations The number of generations to calculate
+   */
   private void iterateGrid(int generations) {
     iterateGrid(generations, 800);
   }
 
+  /**
+   * Handles displaying the game and updating the state.
+   * @param generations The number of generations to calculate
+   * @param delay The length of time to wait between generations, in milliseconds
+   */
   private void iterateGrid(int generations, int delay) {
     try {
       // grid.printGrid();
@@ -55,6 +70,11 @@ public class Game {
     }
   }
 
+  /**
+   * Handles user input and acts as a menu screen.
+   * On the menu screen there will be nine test cases that the user can choose between
+   * @throws FileNotFoundException Throws if the csv file holding the selected example does not exist
+   */
   private void intializeProgram() throws FileNotFoundException {
     System.out.println("\033[H\033[2J");
     System.out.println("   ______                               _          ______                              ____   __    _ ____   ");
@@ -111,6 +131,7 @@ public class Game {
           break;
         case 7:
           example = TestCases.RANDOM;
+          // Creating a two dimensional array with random values
           int[][] randomGame = new int[10][10];
           for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
@@ -121,7 +142,7 @@ public class Game {
           grid.setGridState(randomGame);
           break;
         case 8:
-          // Same as the RANDOM test case, but bigger and the game runs longer
+          // Same as the RANDOM test case, but twice as big
           example = TestCases.PERFORMANCE;
           int[][] performance = new int[20][20];
           for (int i = 0; i < 20; i++) {
